@@ -119,7 +119,7 @@ class hosts (
     ip           => $localhost6_ip,
   }
 
-  @@host { $::fqdn:
+  host { $::fqdn:
     ensure       => $fqdn_ensure,
     host_aliases => $my_fqdn_host_aliases,
     ip           => $fqdn_ip,
