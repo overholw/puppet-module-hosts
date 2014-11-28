@@ -16,7 +16,7 @@ class hosts (
   $purge_hosts           = false,
   $target                = '/etc/hosts',
   $host_entries          = undef,
-  $storeconfigs_enabled   = true,
+  $storeconfigs_enabled  = false,
 ) {
 
 
