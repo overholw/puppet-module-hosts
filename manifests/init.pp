@@ -16,7 +16,7 @@ class hosts (
   $purge_hosts           = false,
   $target                = '/etc/hosts',
   $host_entries          = undef,
-  $storeconfig_enabled   = true,
+  $storeconfigs_enabled   = true,
 ) {
 
 
@@ -61,11 +61,11 @@ class hosts (
   }
 
   # validate type and convert string to boolean if necessary
-  $storeconfig_enabled_type = type($storeconfig_enabled)
-  if $storeconfig_enabled_type == 'string' {
-    $storeconfig_enabled_real = str2bool($storeconfig_enabled)
+  $storeconfigs_enabled_type = type($storeconfigs_enabled)
+  if $storeconfigs_enabled_type == 'string' {
+    $storeconfigs_enabled_real = str2bool($storeconfigs_enabled)
   } else {
-    $storeconfig_enabled_real = $collect_all
+    $storeconfigs_enabled_real = $storeconfigs_enabled
   }
 
   
