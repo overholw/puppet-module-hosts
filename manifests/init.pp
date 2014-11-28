@@ -16,6 +16,7 @@ class hosts (
   $purge_hosts           = false,
   $target                = '/etc/hosts',
   $host_entries          = undef,
+  $storeconfig_enabled   = true,
 ) {
 
 
@@ -59,6 +60,15 @@ class hosts (
     $purge_hosts_enabled = $purge_hosts
   }
 
+  # validate type and convert string to boolean if necessary
+  $storeconfig_enabled_type = type($storeconfig_enabled)
+  if $storeconfig_enabled_type == 'string' {
+    $storeconfig_enabled_real = str2bool($storeconfig_enabled)
+  } else {
+    $storeconfig_enabled_real = $collect_all
+  }
+
+  
   if $ipv4_localhost_enabled == true {
     $localhost_ensure     = 'present'
     $localhost_ip         = '127.0.0.1'
@@ -119,20 +129,29 @@ class hosts (
     ip           => $localhost6_ip,
   }
 
-  @@host { $::fqdn:
-    ensure       => $fqdn_ensure,
-    host_aliases => $my_fqdn_host_aliases,
-    ip           => $fqdn_ip,
-  }
-
-  case $collect_all_real {
-    # collect all the exported Host resources
-    true:  {
-      Host <<| |>>
+  if ($storeconfigs_enabled_real )
+  {
+    @@host { $::fqdn:
+      ensure       => $fqdn_ensure,
+      host_aliases => $my_fqdn_host_aliases,
+      ip           => $fqdn_ip,
     }
-    # only collect the exported entry above
-    default: {
-      Host <<| title == $::fqdn |>>
+    
+    case $collect_all_real {
+      # collect all the exported Host resources
+      true:  {
+        Host <<| |>>
+      }
+      # only collect the exported entry above
+      default: {
+        Host <<| title == $::fqdn |>>
+      }
+    }
+  } else {
+    host { $::fqdn:
+      ensure       => $fqdn_ensure,
+      host_aliases => $my_fqdn_host_aliases,
+      ip           => $fqdn_ip,
     }
   }
 
