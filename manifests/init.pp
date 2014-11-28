@@ -131,21 +131,11 @@ class hosts (
 
   if ($storeconfigs_enabled_real )
   {
-    @@host { $::fqdn:
-      ensure       => $fqdn_ensure,
-      host_aliases => $my_fqdn_host_aliases,
-      ip           => $fqdn_ip,
-    }
-    
-    case $collect_all_real {
-      # collect all the exported Host resources
-      true:  {
-        Host <<| |>>
-      }
-      # only collect the exported entry above
-      default: {
-        Host <<| title == $::fqdn |>>
-      }
+    class {'hosts::collect':
+      fqdn_ensure          => $fqdn_ensure,
+      my_fqdn_host_aliases => $my_fqdn_host_aliases,
+      fqdn_ip              => $fqdn_ip,
+      collect_all_real     => $collect_all_real,
     }
   } else {
     host { $::fqdn:
